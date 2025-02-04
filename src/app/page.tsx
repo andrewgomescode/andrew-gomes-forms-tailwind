@@ -1,17 +1,60 @@
 "use client";
 import { SettingsTabs } from "@/components/SettingsTabs";
 import * as Input from "@/components/Input";
-import { Bold, Italic, Link, List, ListOrdered, Mail } from "lucide-react";
+import {
+  Bold,
+  Italic,
+  Link,
+  List,
+  ListOrdered,
+  Mail,
+  Moon,
+  Sun,
+} from "lucide-react";
 import * as FileInput from "@/components/Form/FileInput";
 import { Select } from "@/components/Form/Select";
 import { SelectItem } from "@/components/Form/Select/SelectItem";
 import { Textarea } from "@/components/Textarea";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Carregar o tema salvo no localStorage ao montar o componente
+  useEffect(() => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+    }
+  }, []);
+
+  // Função para alternar o tema e atualizar o ícone
+  const toggleTheme = () => {
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
+
   return (
     <>
-      <h1 className="text-3xl font-medium text-zinc-900 dark:text-zinc-100">
+      <h1 className="flex gap-4 text-3xl font-medium text-zinc-900 dark:text-zinc-100">
         Configurações
+        <button
+          onClick={toggleTheme}
+          className="rounded-full border border-zinc-300 bg-violet-700 p-1 text-zinc-100 hover:bg-violet-800 dark:border-zinc-700 dark:bg-violet-900 dark:text-zinc-300 dark:hover:bg-violet-600"
+        >
+          {isDarkMode ? <Sun /> : <Moon />}
+        </button>
       </h1>
 
       <SettingsTabs />
